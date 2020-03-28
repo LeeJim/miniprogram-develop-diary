@@ -24,6 +24,7 @@
 - [x] [起步](start.md)
 - [x] [挖掘数据](fetch-data.md)
 - [x] [小程序框架设计](frame-design.md)
+    - [x] [日志的巧妙封装](log-wrapper.md)
 - [x] 小程序新特性
     - [x] [自定义tabbar](custom-tabbar.md)
 - [x] 云开发相关
