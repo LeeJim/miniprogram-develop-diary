@@ -87,7 +87,11 @@ global.jwx = jwx
 ```js
 import { promisifyAll } from 'miniprogram-api-promise';
 
+let jwx = {}
+
 promisifyAll(wx, jwx)
+
+global.jwx = jwx
 ```
 
 > 另外还有一点需要提到的是，官方这个工具类库，判断是否为异步函数的方式是枚举。会存在遗漏新API的可能。
