@@ -54,7 +54,7 @@ let { miniProgram } = wx.getAccountInfoSync()
 let env = miniProgram.envVersion
 let log = wx.getRealtimeLogManager ? wx.getRealtimeLogManager() : null
 
-if (env === 'develop' && log) {
+if (env !== 'develop' && log) {
     console.log = function() {
         log.info.apply(log, arguments)
     }
