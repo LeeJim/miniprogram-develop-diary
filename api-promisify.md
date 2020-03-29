@@ -125,7 +125,7 @@ wx = new Proxy({}, {
 ```js
 let syncFuncList = ['getMenuButtonBoundingClientRect']
 // name为函数名
-let isSync = name.endsWith('Sync') && !syncFuncList.includes(name)
+let isSync = name.endsWith('Sync') || syncFuncList.includes(name)
 ```
 
 
@@ -151,6 +151,7 @@ wx = new Proxy({}, {
             if (isSyncFunc || isNotFunc) return fn
 
             return (obj) => {
+                if (!obj) return fn()
                 if (hasCallback(obj)) return fn(obj)
                 return promisify(fn)(obj)
             }
@@ -183,4 +184,4 @@ wx = jwx
 
 相当于我的做法是黑名单机制，而官方采用了白名单机制。
 
-> 另外需要注意的是，开发者工具记得打开 **增强编译**
+> 最后再提醒下，开发者工具记得打开 **增强编译**

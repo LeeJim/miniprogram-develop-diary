@@ -23,12 +23,14 @@
 
 - [x] [起步](start.md)
 - [x] [挖掘数据](fetch-data.md)
-- [x] [小程序框架设计](frame-design.md)
+- [ ] 小程序相关
+    - [x] [框架设计](frame-design.md)
     - [x] [日志的巧妙封装](log-wrapper.md)
     - [x] [API Promise化](api-promisify.md)
-- [ ] 小程序新特性
     - [ ] [自定义tabbar](custom-tabbar.md)
+    - [ ] 自动更新机制
 - [ ] 云开发相关
-    - [ ] [数据迁移](data-export.md)
+    - [ ] 数据迁移
     - [ ] 数据库权限
+    - [ ] 兼容性处理
 - [ ] 运营相关
