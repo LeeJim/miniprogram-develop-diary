@@ -25,12 +25,17 @@
 - [x] [挖掘数据](fetch-data.md)
 - [ ] 小程序相关
     - [x] [框架设计](frame-design.md)
-    - [x] [日志的巧妙封装](log-wrapper.md)
+    - [x] [实时日志的封装](log-wrapper.md)
     - [x] [API Promise化](api-promisify.md)
     - [x] [自定义tabbar](custom-tabbar.md)
+    - [x] [全局变量的管理](global-data-manage.md)
     - [ ] 自动更新机制
+- [ ] CSS样式
+    - [ ] 一些思考
 - [ ] 云开发相关
     - [ ] 数据迁移
     - [ ] 数据库权限
     - [ ] 兼容性处理
+- [ ] 工程化
+    - 自动化发布
 - [ ] 运营相关
