@@ -87,56 +87,37 @@ global[health] = {}
 
 由于每个`Symbol`返回的值是唯一的，因此这个`Symbol`可以单独保存，以便各个文件引用。
 
+> 由于 `Symbol` 属于新特性，因此需要关注下兼容性
+
+![](images/compatibility-symbol.jpg)
+
 ### 管理声明
 
 通过`Symbol`的方式解决了变量的污染问题，但仍然无法对全局变量的声明进行管理。
 
-因此可以通过收敛设置权限的方式来处理。
+我想到的办法就是给 `global` 增加个代理，对 `global` 的任何操作，都先经过代理检测，这样就有了强力的保障。
 
-通过收敛 `global` 的 `setter` 函数，收敛 `global` 的设置权限。
-
-### setProperty
-
-本想通过`Object.setProperty`来设置`global`的描述符（报错了）：
+因此，可以使用新特性：`Proxy` 来监听 `global` 的变更，举例说明：
 
 ```js
-// global.js
+global = new Proxy(global, {
+    set(obj, prop, val) {
+        if (prop in obj) {
+            throw new TypeError(`${prop}: 该属性已定义！`)
+        }
 
-let originalGlobal = JSON.parse(JSON.stringify(global))
-
-Object.defineProperty(window, 'global', { // throw error
-    get() {
-        return originalGlobal
+        // 可以做其他策略
+        // 或者上报数据，让你知道有哪些人偷偷定义了全局对象
+        obj[prop] = val
+        return true
     },
-    writable: false
 })
 ```
 
-![](images/global-error1.jpg)
+> 由于 `Proxy` 属于新特性，因此需要关注下兼容性
 
-报错了，说明`window`不是个对象，反而是`undefined`。将`window`改成`this`同样不行。
-
-### 原型链
-
-既然无法设置`global`的描述符，那我想到了通过原型链来实现。
-
-首先用`Object.seal`将`global`封闭，然后设置global的原型链：
-
-```js
-// global.js
-let galaxy = Object.create(null)
-
-Object.seal(global)
-
-global.__proto__ = galaxy
-
-module.exports = {
-    setData(key, val) {
-        galaxy.key = val
-    }
-}
-```
+![](images/compatibility-proxy.jpg)
 
 ## 总结
 
-通过收敛权限之后，可以设定一些设置属性的规则，从而达到控制全局变量的作用。
+使用 `Proxy` 之后，能对 `global` 的各种操作（设置属性，设置原型等13种操作）进行监控，即能避免重复定义变量，也可以很好的管理全局变量，两全其美。
