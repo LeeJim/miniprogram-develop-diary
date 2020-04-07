@@ -29,6 +29,7 @@
     - [x] [API Promise化](api-promisify.md)
     - [x] [自定义tabbar](custom-tabbar.md)
     - [x] [全局变量的管理](global-data-manage.md)
+    - [x] [组件封装的思考](thinking-about-components.md)
     - [ ] 自动更新机制
 - [ ] CSS样式
     - [ ] 一些思考
