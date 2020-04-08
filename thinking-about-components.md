@@ -66,9 +66,9 @@ Component({
 
 > 制作一个 **对话框(modal)** 组件
 
-也许有的读者会感到困惑，官方不是有提供`wx.showModal`API可以直接用吗，为什么要重复造轮子
+也许有的读者会感到困惑，官方不是有提供 `wx.showModal` 可以直接用吗，为什么要重复造轮子
 
-其实，当你的产品想要结合`Modal`和`Button`的`open-type`能力时，你就会明白重复造轮子的必要性以及`wx.showModal`的局限性。
+其实，当你的产品想要结合 `Modal` 和 `Button` 的 `open-type` 能力时，你就会明白重复造轮子的必要性以及`wx.showModal`的局限性
 
 ### 属性定义
 
@@ -77,3 +77,230 @@ Component({
 除此以外，其中关键的一个属性就是 表示对话框当前的显示状态：`visible`
 
 此时，有两种选择，第一种是将这个变量存在页面上，通过`property`传递给`Modal`组件；另外一种，就是作为`Modal`组件`data`中的一员
+
+### property传递
+
+通过`property`传递的话，就相当于将 `Modal` 的控制权交到对应的页面，举例：
+
+```html
+<!-- home.wxml -->
+
+<modal visible="{{visible}}" />
+```
+
+```js
+// home.js
+
+Page({
+    data: {
+        visible: false
+    },
+    toggleModal() {
+        this.setData({ visible: !this.data.visible })
+    }
+})
+```
+
+此时对应的 `Modal`：
+
+```js
+// modal.js
+
+Component({
+    properties: {
+        visible: {
+            type: Boolean,
+            value: false,
+            observer(newVal, oldVal) {
+                this.setData({ visible: newVal })
+            }
+        }
+    }
+})
+```
+
+> 这里和`Vue`框架有个差异，`Vue`对于传进来的property会自动赋值，而小程序则需要自己手动赋值
+
+#### 问题与办法
+
+当 `visible` 这个变量被 `Modal` 和 `Page` 同时使用时，会出现不显示的问题。
+
+为了便于描述，我通过描述真实场景来讲解：
+
+1. 当页面需要显示对话框时，`Page` 传递 `visible=true` 给 `Modal`
+2. 经过一段时间之后，用户关闭了对话框，此时 `Modal` 将自身的 `visible` 设置为 `false`
+3. 当页面需要再次出现对话框时，`Page` 继续传递`visible=true` 给 `Modal`，**此时发现对话框不会显示**
+
+通过分析可以发现，由于 `Page` 两次传递相同的 `visible=true` 给 `Modal` ，因此第二次传递的时候，被 `Modal` 直接忽略掉了。
+
+这个问题也很好解决，大致思路就是保证每次传递的值不同即可：
+
+- 传递的值前面加上时间戳，组件再将时间戳移除（比较直观，但是不方便）
+- 利用对象不相等的机制，数据传递只传对象，不传基础数据类型（比如`{ visible: true } !== { visible: true }`)
+
+### 组件自身属性
+
+这种是我推荐的方案。将 `visible` 属性交由组件 `Modal` 自行管理：
+
+```js
+// modal.js
+
+Component({
+    data: {
+        visible: false
+    },
+    methods: {
+        show() {
+            this.setData({ visible: true })
+        }
+    }
+})
+```
+
+由于父组件或者当前页面可以直接获取组件的实例，因此可以直接调用组件的`setData`，如：
+
+```js
+let $modal = this.selectComponent('#modal')
+
+$modal.setData({ visible: true })
+```
+
+但是不建议这样使用，而是组件暴露方法让外部调用：
+
+```js
+let $modal = this.selectComponent('#modal')
+
+$modal.show()
+```
+
+### 组件的事件
+
+通常，对话框都会有按钮，一个或两个。
+
+因此 `Modal` 需要与父组件通过 **事件(event)** 的方式传递信息：当前点击了取消还是确定按钮：
+
+```html
+<!-- home.wxml -->
+
+<modal id="modal" bind:btntap="handleModalTap" />
+```
+
+```js
+// home.js
+
+Page({
+    showModal() {
+        let $modal = this.selectComponent('#modal')
+
+        $modal.show()
+    },
+
+    // 其他方法
+
+    handleModalTap(e) {
+        let { type } = e.detail
+
+        // type = cancel or confirm
+    }
+})
+```
+
+在 `Modal` 的构造函数则是这样的：
+
+```js
+// modal.js
+
+Component({
+    data: {
+        visible: false
+    }
+    methods: {
+        handleBtnTap(e) {
+            let { type } = e.target.dataset
+
+            this.triggerEvent('btntap', { type })
+        }
+    }
+})
+```
+
+```html
+<!-- modal.wxml -->
+
+<view class="wrapper">
+    <!-- 省略其他结构 -->
+    <view class="foot" bindtap="handleBtnTap">
+        <button data-type="cancel">取消</button>
+        <button data-type="confirm">确定</button>
+    </view>
+</view>
+```
+
+这样设计 `Modal` 组件，的确可以满足使用，但是不够好用
+
+因为展示对话框时使用的是 `showModal` 而用户操作之后又是通过另外一个方法 `handleModalTap` 反馈的。当一段时间之后回看这样的代码，会发现这种写法存在思维的中断，不利于代码维护
+
+所以，我建议结合 `Promise` 来封装 `Modal`
+
+### 省略事件
+
+由于展示对话框之后，用户必然要操作，因此可以在 `showModal` 的时候，通过 `Promise` 返回对应的操作信息即可
+
+另外，需要引入发布订阅机制（以下使用 `Node.js` 的 `Events` 举例）：
+
+```js
+// modal.js
+
+const EventEmitter = require('events');
+const ee = new EventEmitter();
+
+Component({
+    data: {
+        visible: false
+    },
+
+    methods: {
+        show() {
+            this.setData({ visible: true })
+
+            return new Promise((resolve, reject) => {
+                ee.on('cancel', () => {
+                    reject()
+                })
+                ee.on('confirm', () => {
+                    resolve()
+                })
+            })
+        },
+
+        handleBtnTap(e) {
+            let { type } = e.target.dataset
+
+            ee.emit(type)
+            this.triggerEvent('btntap', { type })
+        }
+    }
+})
+```
+
+此时，在 `Page` 即可这样展示对话框：
+
+```js
+// home.js
+
+Page({
+    onLoad() {
+        let $modal = this.selectComponent('#modal')
+
+        $moda.show().then(() => {
+            // 当点击确认时
+        }).catch(() => {
+            // 当点击取消时
+        })
+    }
+})
+```
+
+## 总结
+
+组件是很好用的机制，也是最常用到的能力。因此日常开发中，应该会遇到各种各样组件封装的问题，平时遇到应该多思考总结一下，对团队和自己都很有帮助！
