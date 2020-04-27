@@ -30,7 +30,7 @@
     - [x] [自定义tabbar](custom-tabbar.md)
     - [x] [全局变量的管理](global-data-manage.md)
     - [x] [组件封装的思考](thinking-about-components.md)
-    - [ ] 自动更新机制
+    - [x] [自动更新机制](update.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
