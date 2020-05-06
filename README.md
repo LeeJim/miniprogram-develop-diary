@@ -31,6 +31,7 @@
     - [x] [全局变量的管理](global-data-manage.md)
     - [x] [组件封装的思考](thinking-about-components.md)
     - [x] [自动更新机制](update.md)
+    - [ ] [自定义导航栏](custom-navigator.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
@@ -38,5 +39,6 @@
     - [ ] 数据库权限
     - [ ] 兼容性处理
 - [ ] 工程化
-    - 自动化发布
+    - [x] [编码规范的一些思考](code-style-guide.md)
+    - [ ] 自动化发布
 - [ ] 运营相关
