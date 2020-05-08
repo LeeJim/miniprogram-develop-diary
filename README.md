@@ -23,7 +23,7 @@
 
 - [x] [起步](start.md)
 - [x] [挖掘数据](fetch-data.md)
-- [ ] 小程序相关
+- [x] 小程序相关
     - [x] [框架设计](frame-design.md)
     - [x] [实时日志的封装](log-wrapper.md)
     - [x] [API Promise化](api-promisify.md)
@@ -31,14 +31,14 @@
     - [x] [全局变量的管理](global-data-manage.md)
     - [x] [组件封装的思考](thinking-about-components.md)
     - [x] [自动更新机制](update.md)
-    - [ ] [自定义导航栏](custom-navigator.md)
+    - [x] [自定义导航栏](custom-navigator.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
     - [ ] 数据迁移
     - [ ] 数据库权限
     - [ ] 兼容性处理
-- [ ] 工程化
+- [x] 工程化
     - [x] [编码规范的一些思考](code-style-guide.md)
     - [ ] 自动化发布
 - [ ] 运营相关
