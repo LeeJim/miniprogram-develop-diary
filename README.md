@@ -32,6 +32,7 @@
     - [x] [组件封装的思考](thinking-about-components.md)
     - [x] [自动更新机制](update.md)
     - [x] [自定义导航栏](custom-navigator.md)
+    - [x] [订阅消息的思考](think-about-subscribe.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
