@@ -33,7 +33,7 @@
     - [x] [自动更新机制](update.md)
     - [x] [自定义导航栏](custom-navigator.md)
     - [x] [订阅消息的思考](think-about-subscribe.md)
-    - [ ] [小程序路由封装](router-wrapper.md)
+    - [x] [小程序路由的设计](router-wrapper.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
