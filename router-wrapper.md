@@ -46,8 +46,7 @@
 
 通过 **导航守卫** 的方式，在全局上注册“守卫”来保护导航，收拢“守卫”的逻辑，保证代码整洁的同时，还增加了导航的安全性。
 
-## 思路
-
+## 解决办法
 
 ### 命名路由
 
@@ -103,3 +102,27 @@ router.beforeEach((to, from) => {
     // do something...
 })
 ```
+
+其中，`to`是即将进入的路由对象，而`from`则是当前正要离开的路由对象。
+
+路由对象包含：
+- `pageID`：页面ID
+- `path`：页面ID对应的path
+- `params`：传递的参数
+- `query`: URL的查询参数
+
+## 配置信息
+
+由前文提到的 **命名路由** 做法需要一个配置文件来关联`页面ID`与`页面路径`的关系。
+
+页面的配置信息，均使用`router.config.js`设置，然后通过构建工具编译转成`app.json`。
+
+以下是`route.config.js`：
+
+![](images/router-wrapper/config.png)
+
+> 其中，跳转首页则是`router.go('home')`；而跳转分包`health`的首页则是使用`router.go('health.home')`
+
+以上的配置文件，可自动转换成微信官方可识别的`app.json`配置：
+
+![](images/router-wrapper/app-json.png)
