@@ -34,6 +34,7 @@
     - [x] [自定义导航栏](custom-navigator.md)
     - [x] [订阅消息的思考](think-about-subscribe.md)
     - [x] [路由的封装设计](router-wrapper.md)
+    - [ ] [谈谈计算属性的实现方案](about-computed.md)
 - [ ] CSS样式
     - [ ] 一些思考
 - [ ] 云开发相关
